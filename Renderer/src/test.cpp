@@ -1,15 +1,11 @@
-//C++ Standard Library headers for input/output,
-// string manipulation, and file handling.
-#include <iostream>
-#include <stdio.h>
-#include <sstream>
-#include <string>
-#include <fstream>
+//Core Rendering Libraries
+#include "ResourceManager/Shader.h"
 
 // Include the GLAD and GLFW headers for OpenGL functionality.
-#include <glad\glad.h>
 #include <GLFW\glfw3.h>
 
+//C++ Standard Libraries
+#include <memory>
 
 //Some global Data to deal with in different functions
 GLFWwindow* window;
@@ -46,9 +42,7 @@ unsigned int indices[] =
 };
 
 GLuint VBO, VAO, EBO;
-GLuint vertexShader;
-GLuint fragmentShader;
-GLuint shaderprogram;
+std::unique_ptr<Shader> shader;
 
 //fUNCTION DEFINITIONS
 void InitWIN()
@@ -92,74 +86,6 @@ void InitWIN()
 	glViewport(0, 0, 800, 600);
 }
 
-const std::string LoadFromFile(const char* path)
-{
-	std::ifstream file(path);
-
-	if (!file.is_open())
-	{
-		std::cout << "File not found" << std::endl;
-		return "";
-	}
-
-	std::stringstream ss;
-	std::string line;
-
-	while (std::getline(file, line))
-	{
-		ss << line << '\n';
-	}
-	std::cout << ss.str();
-	return ss.str();
-}
-
-void CreateShader(const char* path, GLuint& shader, GLenum type)
-{
-	const std::string source = LoadFromFile(path);
-	const char* shaderSource = source.c_str();
-	shader = glCreateShader(type);
-	glShaderSource(shader, 1, &shaderSource, NULL);
-	glCompileShader(shader);
-
-	int success;
-	char log[512];
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-
-	if (!success)
-	{
-		std::cout << "FAILED TO COMPILE THE SHADER SOURCE::OPENGL MESSAGE::";
-		glGetShaderInfoLog(shader, sizeof(log), NULL, log);
-		std::cout << log << "\n";
-		return;
-	}
-
-	std::cout << "SUCCESS IN CREATING SHADER\n";
-}
-
-void CreateShaderProgram()
-{
-	shaderprogram = glCreateProgram();
-	glAttachShader(shaderprogram, vertexShader);
-	glAttachShader(shaderprogram, fragmentShader);
-	glLinkProgram(shaderprogram);
-
-	int success;
-	char log[512];
-	glGetProgramiv(shaderprogram, GL_LINK_STATUS, &success);
-
-	if (!success)
-	{
-		std::cout << "FAILED TO LINK THE SHADERS::OPENGL MESSAGE::";
-		glGetProgramInfoLog(shaderprogram, 512, NULL, log);
-		std::cout << log << "\n";
-		return;
-	}
-
-	std::cout << "SUCCESS IN CREATING SHADER PROGRAM\n";
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-}
-
 void InitObjects()
 {
 	//Creating Buffer & Array Objects& Attributes & Shaders
@@ -180,11 +106,9 @@ void InitObjects()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	//Compiling Vertex& Frag Shader
-	CreateShader("Resources\\VertexShader.txt", vertexShader, GL_VERTEX_SHADER);
-	CreateShader("Resources\\FragmentShader.txt", fragmentShader, GL_FRAGMENT_SHADER);
-	//Linking ShaderProg
-	CreateShaderProgram();
+	shader = std::make_unique<Shader>(
+		"src\\ResourceManager\\Shaders\\VertexShader.txt",
+		"src\\ResourceManager\\Shaders\\FragmentShader.txt");
 }
 
 void ProcessInput()
@@ -247,8 +171,8 @@ void UpdateObjectState()
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	// Bind the shader program and vertex array object (VAO) for rendering.
-	glUseProgram(shaderprogram);
 	glBindVertexArray(VAO);
+	shader->Use();
 }
 
 void Update()
@@ -296,7 +220,6 @@ void CleanUp()
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
-	glDeleteProgram(shaderprogram);
 }
 
 int main()

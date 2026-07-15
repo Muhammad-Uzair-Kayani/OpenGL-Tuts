@@ -97,10 +97,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ResourceManager\Shader.cpp" />
     <ClCompile Include="src\test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resource\Vertex.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ResourceManager\Shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
