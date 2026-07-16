@@ -13,9 +13,13 @@ Shader::~Shader()
 	glDeleteProgram(m_ProgID);
 }
 
-void Shader::Use() const
+void Shader::Use(GLuint texture0, GLuint texture1) const
 {
 	glUseProgram(m_ProgID);
+	GLuint texture0Loc = glGetUniformLocation(m_ProgID, "texture0");
+	glUniform1i(texture0Loc, 0);
+	GLuint texture1Loc = glGetUniformLocation(m_ProgID, "texture1");
+	glUniform1i(texture1Loc, 1);
 }
 
 const std::string Shader::LoadFromFile(const char* path)

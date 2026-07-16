@@ -1,6 +1,7 @@
 //Core Rendering Libraries
 #include "ResourceManager/Shader.h"
-
+#define STB_IMAGE_IMPLEMENTATION
+#include "ResourceManager/stb_image.h"
 // Include the GLAD and GLFW headers for OpenGL functionality.
 #include <GLFW\glfw3.h>
 
@@ -29,19 +30,22 @@ bool posRecorded = false;
 //Vertices
 float vertices[] =
 {
-	-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // Bottom left
-	 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,// Bottom right
-	 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f,//Top middle
-	-0.5f,  0.5f, 0.0f, // Top left
-	 0.5f,  0.5f, 0.0f  // Top Right
+	-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, // Bottom left
+	 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // Bottom right
+	 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.5f, 1.0f, // Top middle
+	-0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, // Top left
+	 0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f  // Top Right
 };
 
 unsigned int indices[] =
 {
-	0,1,2, // First Triangle
+	0, 1, 3,
+	3, 1, 4// Square
 };
 
 GLuint VBO, VAO, EBO;
+GLuint texture0, texture1;
+int t_Width, t_Height, nrChannels;
 std::unique_ptr<Shader> shader;
 
 //fUNCTION DEFINITIONS
@@ -88,6 +92,50 @@ void InitWIN()
 
 void InitObjects()
 {
+
+	//Creating and Attching Textures
+	//First loading the texture with correct format and then 
+	//creating the texture object and binding it to the correct target.
+	unsigned char* data = stbi_load("src\\ResourceManager\\Textures\\wall.jpg",
+										&t_Width, &t_Height, &nrChannels, 0);
+	if (!data) std::cout << "Failed to load texture" << std::endl;
+	else
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glGenTextures(1, &texture0);
+		glBindTexture(GL_TEXTURE_2D, texture0);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, t_Width, t_Height, 0,
+			GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		stbi_image_free(data);
+	}
+
+	data = stbi_load("src\\ResourceManager\\Textures\\face.png",
+		&t_Width, &t_Height, &nrChannels, 0);
+	if (!data) std::cout << "Failed to load texture" << std::endl;
+	else
+	{
+		glActiveTexture(GL_TEXTURE1);
+		glGenTextures(1, &texture1);
+		glBindTexture(GL_TEXTURE_2D, texture1);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, t_Width, t_Height, 0,
+			GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		stbi_image_free(data);
+	}
+
 	//Creating Buffer & Array Objects& Attributes & Shaders
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
@@ -100,11 +148,14 @@ void InitObjects()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	shader = std::make_unique<Shader>(
 		"src\\ResourceManager\\Shaders\\VertexShader.txt",
@@ -170,9 +221,10 @@ void UpdateObjectState()
 	// Clear the color buffer to prepare for rendering.
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-	// Bind the shader program and vertex array object (VAO) for rendering.
+	// Bind the shader program and vertex array object (VAO) for rendering.;
 	glBindVertexArray(VAO);
-	shader->Use();
+	shader->Use(texture0, texture1);
+
 }
 
 void Update()
@@ -192,7 +244,7 @@ void Update()
 void Render()
 {
 	// Draw the elements (triangles) using the index buffer (EBO).
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 void Run()

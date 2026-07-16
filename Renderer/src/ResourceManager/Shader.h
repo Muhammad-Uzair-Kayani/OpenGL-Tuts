@@ -12,7 +12,7 @@ public:
 
 	Shader(const char* vertexPath, const char* fragmentPath);
 	~Shader();
-	void Use() const;
+	void Use(GLuint, GLuint) const;
 	inline unsigned int GetID() const { return m_ProgID; };
 
 	//Private utility functions for shader compilation and linking
