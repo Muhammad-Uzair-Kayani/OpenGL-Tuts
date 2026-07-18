@@ -3,6 +3,8 @@
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
 	GLuint vertexShader, fragmentShader;
+	t_shader[GL_VERTEX_SHADER] = "VERTEX SHADER";
+	t_shader[GL_FRAGMENT_SHADER] = "FRAGMENT Shader";
 	CreateShader(vertexPath, vertexShader, GL_VERTEX_SHADER);
 	CreateShader(fragmentPath, fragmentShader, GL_FRAGMENT_SHADER);
 	CreateShaderProgram(vertexShader, fragmentShader);
@@ -13,13 +15,9 @@ Shader::~Shader()
 	glDeleteProgram(m_ProgID);
 }
 
-void Shader::Use(GLuint texture0, GLuint texture1) const
+void Shader::Use()
 {
 	glUseProgram(m_ProgID);
-	GLuint texture0Loc = glGetUniformLocation(m_ProgID, "texture0");
-	glUniform1i(texture0Loc, 0);
-	GLuint texture1Loc = glGetUniformLocation(m_ProgID, "texture1");
-	glUniform1i(texture1Loc, 1);
 }
 
 const std::string Shader::LoadFromFile(const char* path)
@@ -56,7 +54,7 @@ void Shader::CreateShader(const char* path, GLuint& shader, GLenum type)
 
 	if (!success)
 	{
-		std::cout << "FAILED TO COMPILE THE SHADER SOURCE::OPENGL MESSAGE::";
+		std::cout << "FAILED TO COMPILE THE SHADER SOURCE::OPENGL MESSAGE::"<<t_shader[type]<<"::";
 		glGetShaderInfoLog(shader, sizeof(log), NULL, log);
 		std::cout << log << "\n";
 		return;

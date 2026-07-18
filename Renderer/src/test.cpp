@@ -3,7 +3,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "ResourceManager/stb_image.h"
 // Include the GLAD and GLFW headers for OpenGL functionality.
-#include <GLFW\glfw3.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 //C++ Standard Libraries
 #include <memory>
@@ -28,19 +31,51 @@ bool posRecorded = false;
 
 //dATA dEFINITIONS
 //Vertices
-float vertices[] =
-{
-	-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, // Bottom left
-	 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // Bottom right
-	 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.5f, 1.0f, // Top middle
-	-0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, // Top left
-	 0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f  // Top Right
+float vertices[] = {
+-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+-0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+-0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+-0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
+-0.5f, 0.5f, -0.5f, 0.0f, 1.0f
 };
 
 unsigned int indices[] =
 {
-	0, 1, 3,
-	3, 1, 4// Square
+	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+	10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+	20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+	30, 31, 32, 33, 34, 35
 };
 
 GLuint VBO, VAO, EBO;
@@ -88,6 +123,7 @@ void InitWIN()
 	// In this case we are telling OpenGL to render from the bottom left corner of the window
 	// to the top right corner of the window.
 	glViewport(0, 0, 800, 600);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void InitObjects()
@@ -96,6 +132,7 @@ void InitObjects()
 	//Creating and Attching Textures
 	//First loading the texture with correct format and then 
 	//creating the texture object and binding it to the correct target.
+	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data = stbi_load("src\\ResourceManager\\Textures\\wall.jpg",
 										&t_Width, &t_Height, &nrChannels, 0);
 	if (!data) std::cout << "Failed to load texture" << std::endl;
@@ -103,12 +140,13 @@ void InitObjects()
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glGenTextures(1, &texture0);
-		glBindTexture(GL_TEXTURE_2D, texture0);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glBindTexture(GL_TEXTURE_2D, texture0);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, t_Width, t_Height, 0,
 			GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -124,13 +162,12 @@ void InitObjects()
 		glActiveTexture(GL_TEXTURE1);
 		glGenTextures(1, &texture1);
 		glBindTexture(GL_TEXTURE_2D, texture1);
-
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, t_Width, t_Height, 0,
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, t_Width, t_Height, 0,
 			GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		stbi_image_free(data);
@@ -146,20 +183,46 @@ void InitObjects()
 
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
 
 	shader = std::make_unique<Shader>(
 		"src\\ResourceManager\\Shaders\\VertexShader.txt",
 		"src\\ResourceManager\\Shaders\\FragmentShader.txt");
+
+	shader->Use();
+
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::rotate(model, glm::radians(-55.0f),
+		glm::vec3(1.0f, 0.0f, 0.0f));
+
+	glm::mat4 view = glm::mat4(1.0f);
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+	glm::mat4 perspective;
+	perspective = glm::perspective(glm::radians(45.0f), (800.0f / 600.0f), 1.0f, 100.0f);
+
+
+	GLuint transLoc = glGetUniformLocation(shader->GetID(), "model");
+	glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+	GLuint viewLoc = glGetUniformLocation(shader->GetID(), "projection");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+	GLuint projectionLoc = glGetUniformLocation(shader->GetID(), "view");
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(perspective));
+
+
+	GLuint texture0Loc = glGetUniformLocation(shader->GetID(), "texture1");
+	glUniform1i(texture0Loc, 0);
+	GLuint texture1Loc = glGetUniformLocation(shader->GetID(), "texture2");
+	glUniform1i(texture1Loc, 1);
 }
 
 void ProcessInput()
@@ -214,17 +277,41 @@ void UpdateTriPos()
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+	
 }
 
 void UpdateObjectState()
 {
 	// Clear the color buffer to prepare for rendering.
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	// 
 	// Bind the shader program and vertex array object (VAO) for rendering.;
 	glBindVertexArray(VAO);
-	shader->Use(texture0, texture1);
+	shader->Use();
 
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::rotate(model, (float)sin(glfwGetTime()),
+		glm::vec3(1.0f, 1.0f, 1.0f));
+
+	glm::mat4 view = glm::mat4(1.0f);
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+	glm::mat4 perspective;
+	perspective = glm::perspective(glm::radians(45.0f), (800.0f / 600.0f), 0.1f, 100.0f);
+
+
+	GLuint transLoc = glGetUniformLocation(shader->GetID(), "model");
+	glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+	GLuint viewLoc = glGetUniformLocation(shader->GetID(), "projection");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(perspective));
+
+	GLuint projectionLoc = glGetUniformLocation(shader->GetID(), "view");
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, texture1);
 }
 
 void Update()
@@ -244,7 +331,9 @@ void Update()
 void Render()
 {
 	// Draw the elements (triangles) using the index buffer (EBO).
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
 void Run()
@@ -274,8 +363,23 @@ void CleanUp()
 	glDeleteBuffers(1, &EBO);
 }
 
+void Math()
+{
+	glm::vec4 _vector(1.0f, 0.0f, 0.0f, 1.0f);
+	glm::mat4 transformation = glm::mat4(1.0f);
+
+	transformation = glm::translate(transformation, glm::vec3(1.0f, 1.0f, 0.0f));
+
+	_vector = transformation * _vector;
+	std::cout << _vector.x << ", " << _vector.y << ", " << _vector.z;
+
+}
+
 int main()
 {
+
+	Math();
+
 
 	InitWIN();
 	

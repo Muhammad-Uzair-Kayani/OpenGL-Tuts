@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <unordered_map>
 
 #include <glad/glad.h>
 
@@ -12,7 +13,7 @@ public:
 
 	Shader(const char* vertexPath, const char* fragmentPath);
 	~Shader();
-	void Use(GLuint, GLuint) const;
+	void Use();
 	inline unsigned int GetID() const { return m_ProgID; };
 
 	//Private utility functions for shader compilation and linking
@@ -25,5 +26,6 @@ private:
 	//Private member variable to store the shader program ID
 private:
 	unsigned int m_ProgID;
+	std::unordered_map<GLenum, std::string> t_shader;
 };
 

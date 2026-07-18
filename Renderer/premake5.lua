@@ -19,7 +19,8 @@ project "Renderer"
     {
         "../Glad/include",
         "../GLFW/include",
-	"Resource"
+	"Resource",
+	"GLM/glm"
     }
 
     links
