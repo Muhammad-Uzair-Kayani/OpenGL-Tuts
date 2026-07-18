@@ -78,12 +78,35 @@ unsigned int indices[] =
 	30, 31, 32, 33, 34, 35
 };
 
+glm::vec3 cubePositions[] = {
+	glm::vec3(0.0f, 0.0f, 0.0f),
+	glm::vec3(2.0f, 5.0f, -15.0f),
+	glm::vec3(-1.5f, -2.2f, -2.5f),
+	glm::vec3(-3.8f, -2.0f, -12.3f),
+	glm::vec3(2.4f, -0.4f, -3.5f),
+	glm::vec3(-1.7f, 3.0f, -7.5f),
+	glm::vec3(1.3f, -2.0f, -2.5f),
+	glm::vec3(1.5f, 2.0f, -2.5f),
+	glm::vec3(1.5f, 0.2f, -1.5f),
+	glm::vec3(-1.3f, 1.0f, -1.5f)
+};
+
 GLuint VBO, VAO, EBO;
 GLuint texture0, texture1;
 int t_Width, t_Height, nrChannels;
 std::unique_ptr<Shader> shader;
 
 //fUNCTION DEFINITIONS
+
+void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+	glm::mat4 perspective;
+	perspective = glm::perspective(glm::radians(45.0f), (float)(width / height), 0.1f, 100.0f);
+	GLuint viewLoc = glGetUniformLocation(shader->GetID(), "projection");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(perspective));
+}
+
 void InitWIN()
 {
 	// Initialize the GLFW library.
@@ -117,7 +140,7 @@ void InitWIN()
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return;
 	}
-
+	glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
 	//Once we initialized the GLAD now we,
 	// tell opengl from where to where you have ability to render.
 	// In this case we are telling OpenGL to render from the bottom left corner of the window
@@ -206,17 +229,17 @@ void InitObjects()
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
 	glm::mat4 perspective;
-	perspective = glm::perspective(glm::radians(45.0f), (800.0f / 600.0f), 1.0f, 100.0f);
+	perspective = glm::perspective(glm::radians(45.0f), (800.0f / 600.0f), 0.1f, 100.0f);
 
 
 	GLuint transLoc = glGetUniformLocation(shader->GetID(), "model");
 	glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(model));
 
 	GLuint viewLoc = glGetUniformLocation(shader->GetID(), "projection");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(perspective));
 
 	GLuint projectionLoc = glGetUniformLocation(shader->GetID(), "view");
-	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(perspective));
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(view));
 
 
 	GLuint texture0Loc = glGetUniformLocation(shader->GetID(), "texture1");
@@ -224,6 +247,7 @@ void InitObjects()
 	GLuint texture1Loc = glGetUniformLocation(shader->GetID(), "texture2");
 	glUniform1i(texture1Loc, 1);
 }
+
 
 void ProcessInput()
 {
@@ -233,6 +257,7 @@ void ProcessInput()
 		// If the escape key is pressed, set the window to close.
 		glfwSetWindowShouldClose(window, true);
 	}
+
 }
 
 void UpdateMousePosition()
@@ -287,27 +312,6 @@ void UpdateObjectState()
 	// Bind the shader program and vertex array object (VAO) for rendering.;
 	glBindVertexArray(VAO);
 	shader->Use();
-
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::rotate(model, (float)sin(glfwGetTime()),
-		glm::vec3(1.0f, 1.0f, 1.0f));
-
-	glm::mat4 view = glm::mat4(1.0f);
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-
-	glm::mat4 perspective;
-	perspective = glm::perspective(glm::radians(45.0f), (800.0f / 600.0f), 0.1f, 100.0f);
-
-
-	GLuint transLoc = glGetUniformLocation(shader->GetID(), "model");
-	glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-	GLuint viewLoc = glGetUniformLocation(shader->GetID(), "projection");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(perspective));
-
-	GLuint projectionLoc = glGetUniformLocation(shader->GetID(), "view");
-	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(view));
-
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture0);
 	glActiveTexture(GL_TEXTURE1);
@@ -333,7 +337,20 @@ void Render()
 	// Draw the elements (triangles) using the index buffer (EBO).
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+	for (size_t i = 0; i < 10; ++i)
+	{
+		glm::mat4 _matrix = glm::mat4(1.0f);
+		_matrix = glm::translate(_matrix, cubePositions[i]);
+
+		_matrix = glm::rotate(_matrix, glm::radians(50.0f * (i + 1)) * (float)glfwGetTime(),
+			glm::vec3(1, 1, 1));
+
+		GLuint transLoc = glGetUniformLocation(shader->GetID(), "model");
+		glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(_matrix));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
 }
 
 void Run()
