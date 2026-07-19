@@ -13,19 +13,16 @@
 
 //Some global Data to deal with in different functions
 GLFWwindow* window;
-unsigned int width = 800;
-unsigned int height = 600;
+unsigned int width = 1600;
+unsigned int height = 1000;
 const char* title = "OpenGL Window";
 
-double mousePosX = 0.0f;
-double mousePosY = 0.0f;
-
-float Xcor = 0.0f;
-float Ycor = 0.0f;
-float lastXcor = 0.0f;
-float lastYcor = 0.0f;
-float deltaXcor = 0.0f;
-float deltaYcor = 0.0f;
+double lastMouseX = 0;
+double lastMouseY = 0;
+double currentMouseX = 0;
+double currentMouseY = 0;
+double deltaMouseX = 0;
+double deltaMouseY = 0;
 
 bool posRecorded = false;
 
@@ -96,7 +93,70 @@ GLuint texture0, texture1;
 int t_Width, t_Height, nrChannels;
 std::unique_ptr<Shader> shader;
 
+
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraDirection = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+float newTime = 0;
+float lastTime = 0;
+float deltaTime = 0;
+
+float yaw = -90.0f;
+float pitch = 0.0f;
+
+bool firstMove = true;
+
+float Zoom = 0;
 //fUNCTION DEFINITIONS
+
+void OnMouseMoveEvent(GLFWwindow* window, double xpos, double ypos)
+{
+	const float sensi = 80.f;
+	if (firstMove)
+	{
+		lastMouseX = xpos;
+		lastMouseY = ypos;
+		firstMove = false;
+	}
+
+	currentMouseX = xpos;
+	currentMouseY = ypos;
+
+	deltaMouseX = (currentMouseX - lastMouseX) * sensi * deltaTime;
+	deltaMouseY = (currentMouseY - lastMouseY) * sensi * deltaTime;
+
+
+	yaw += deltaMouseX;
+	pitch -= deltaMouseY;
+
+	if (pitch > 90.f)
+		pitch = 90.f;
+
+	if (pitch < -90.f)
+		pitch = -90.f;
+
+	glm::vec3 direction;
+	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction.y = sin(glm::radians(pitch));
+	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	cameraDirection = glm::normalize(direction);
+
+	lastMouseX = currentMouseX;
+	lastMouseY = currentMouseY;
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	Zoom -= (float)yoffset;
+	if (Zoom < 1.0f)
+		Zoom = 1.0f;
+	if (Zoom > 45.0f)
+		Zoom = 45.0f;
+	glm::mat4 perspective;
+	perspective = glm::perspective(glm::radians(Zoom * 2), 1.6f, 0.1f, 100.0f);
+	GLuint viewLoc = glGetUniformLocation(shader->GetID(), "projection");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(perspective));
+}
 
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
@@ -111,7 +171,7 @@ void InitWIN()
 {
 	// Initialize the GLFW library.
 	glfwInit();
-
+	newTime = glfwGetTime();
 	// Tell GLFW which version of OpenGL context we want to create.
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -141,11 +201,18 @@ void InitWIN()
 		return;
 	}
 	glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCursorPosCallback(window, OnMouseMoveEvent);
+	glfwSetScrollCallback(window, scroll_callback);
+	Zoom = 45;
+	lastMouseX = 400;
+	lastMouseY = 300;
+
 	//Once we initialized the GLAD now we,
 	// tell opengl from where to where you have ability to render.
 	// In this case we are telling OpenGL to render from the bottom left corner of the window
 	// to the top right corner of the window.
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, 1600, 1000);
 	glEnable(GL_DEPTH_TEST);
 }
 
@@ -226,10 +293,10 @@ void InitObjects()
 		glm::vec3(1.0f, 0.0f, 0.0f));
 
 	glm::mat4 view = glm::mat4(1.0f);
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
 
 	glm::mat4 perspective;
-	perspective = glm::perspective(glm::radians(45.0f), (800.0f / 600.0f), 0.1f, 100.0f);
+	perspective = glm::perspective(glm::radians(90.0f), (800.0f / 600.0f), 0.1f, 100.0f);
 
 
 	GLuint transLoc = glGetUniformLocation(shader->GetID(), "model");
@@ -251,6 +318,7 @@ void InitObjects()
 
 void ProcessInput()
 {
+	float movementSpeed = deltaTime * 2.5f;
 	// Check if the user has pressed the escape key.
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
@@ -258,52 +326,24 @@ void ProcessInput()
 		glfwSetWindowShouldClose(window, true);
 	}
 
-}
-
-void UpdateMousePosition()
-{
-	// Get the current mouse position in window coordinates.
-	glfwGetCursorPos(window, &mousePosX, &mousePosY);
-	
-	Xcor = (mousePosX / width) * 2.0f - 1.0f; // Normalize to [-1, 1]
-	Ycor = 1.0f - (mousePosY / height) * 2.0f; // Normalize to [-1, 1] and invert Y-axis
-
-	deltaXcor = Xcor - lastXcor;
-	deltaYcor = Ycor - lastYcor;
-
-	lastXcor = Xcor;
-	lastYcor = Ycor;
-}
-
-void RecordPos()
-{
-	if (posRecorded) return;
-
-	if ((Xcor <= 0.01f && Xcor >= -0.01f) && (Ycor <= 0.01f && Ycor >= -0.01f))
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		posRecorded = true;
-		Xcor = 0.0f;
-		Ycor = 0.0f;
-		return;
+		cameraPos += movementSpeed * cameraDirection;
 	}
-	
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	{
+		cameraPos -= movementSpeed * cameraDirection;
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	{
+		cameraPos -= glm::normalize(glm::cross(cameraDirection, cameraUp)) * movementSpeed;
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	{
+		cameraPos += glm::normalize(glm::cross(cameraDirection, cameraUp)) * movementSpeed;
+	}
 }
 
-void UpdateTriPos()
-{
-	if (!posRecorded) return;
-
-	vertices[0] += deltaXcor;
-	vertices[1] += deltaYcor;
-	vertices[6] += deltaXcor;
-	vertices[7] += deltaYcor;
-	vertices[12] += deltaXcor;
-	vertices[13] += deltaYcor;
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-	
-}
 
 void UpdateObjectState()
 {
@@ -320,16 +360,16 @@ void UpdateObjectState()
 
 void Update()
 {
+	newTime = glfwGetTime();
+	deltaTime = newTime - lastTime;
 	// Update the state of the application, handle input, etc.
 	ProcessInput();
 	
 	// Update the state of the objects in the scene, such as position, rotation, etc.
-	UpdateMousePosition();
-	RecordPos();
-	UpdateTriPos();
 	// Update the state of the objects in the scene,
 	// such as position, rotation, etc.
 	UpdateObjectState();
+	lastTime = newTime;
 }
 
 void Render()
@@ -351,6 +391,13 @@ void Render()
 		glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(_matrix));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
+
+	glm::mat4 view;
+	view = glm::lookAt(cameraPos, cameraPos + cameraDirection, cameraUp);
+	
+	GLuint viewLoc = glGetUniformLocation(shader->GetID(), "view");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
 }
 
 void Run()
