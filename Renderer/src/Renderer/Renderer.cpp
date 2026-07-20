@@ -1,9 +1,15 @@
 #include "Renderer.h"
 
+Renderer::Renderer()
+{
+	m_ShaderPrograms.push_back(Shader("src/Resources/Shaders/VertexShader.txt",
+									  "src/Resources/Shaders/VertexShader.txt"));
+}
+
 void Renderer::OnUpdate(GLFWwindow* window)
 {
-	Draw();
 	Render(window);
+	Draw();
 }
 
 void Renderer::Render(GLFWwindow* window)

@@ -25,7 +25,7 @@ private:
 	Window* m_Window;
 	bool m_Running = true;
 
-	Renderer m_Renderer;
+	Renderer* m_Renderer;
 	Camera m_Camera;
 
 };

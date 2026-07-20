@@ -5,6 +5,7 @@ Application::Application()
 {
 	m_Window = new Window();
 	Input::Init(std::bind(&Application::OnEvent, this, std::placeholders::_1), m_Window->GetWindow());
+	m_Renderer = new Renderer();
 }
 
 void Application::Run()
@@ -12,7 +13,7 @@ void Application::Run()
 	while (m_Running)
 	{
 		OnUpdate();
-		m_Renderer.OnUpdate(m_Window->GetWindow());
+		m_Renderer->OnUpdate(m_Window->GetWindow());
 	}
 }
 

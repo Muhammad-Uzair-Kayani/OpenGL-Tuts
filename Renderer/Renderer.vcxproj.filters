@@ -804,4 +804,8 @@
     <ClCompile Include="src\Renderer\Utility\Texture.cpp" />
     <ClCompile Include="src\Renderer\Utility\Buffer.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\Resources\Shaders\FragmentShader.txt" />
+    <Text Include="src\Resources\Shaders\VertexShader.txt" />
+  </ItemGroup>
 </Project>
