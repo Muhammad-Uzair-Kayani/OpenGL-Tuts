@@ -10,7 +10,8 @@ public:
 	Shader(std::string, std::string);
 	
 	inline GLuint GetID() { return m_ShaderID; }
-
+	inline void UseProgram() { glUseProgram(m_ShaderID); }
+	inline GLuint GetTextureID(std::string name) { UseProgram(); return glGetUniformLocation(m_ShaderID, name.c_str()); }
 
 private:
 

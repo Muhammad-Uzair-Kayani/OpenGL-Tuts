@@ -1,11 +1,16 @@
 #include "Application.h"
 #include "Input/Input.h"
 
+#include "Resources/Model/Model.h"
+#include "Resources/Shapes/Shape.h"
+#include "Renderer/Renderer.h"
+
 Application::Application()
 {
 	m_Window = new Window();
 	Input::Init(std::bind(&Application::OnEvent, this, std::placeholders::_1), m_Window->GetWindow());
 	m_Renderer = new Renderer();
+	TestObject();
 }
 
 void Application::Run()
@@ -60,4 +65,38 @@ void Application::OnEvent(Event& e)
 		break;
 	}	
 	
+}
+
+void Application::TestObject()
+{
+	Triangle* shape = new Triangle();
+
+	Model* model = new Model();
+
+	model->BindShader("src/Resources/Shaders/VertexShader.txt", "src/Resources/Shaders/FragmentShader.txt");
+
+	model->BindShape(shape);
+
+	model->BindBuffer(
+		shape->PositionIndex(),
+		shape->PositionSize(),
+		shape->PositionStride(),
+		shape->PositionOffset()
+	);
+
+	// Later, after you have a texture:
+	/*
+	model->BindTexture(
+		"texture.png",
+		0, 0, 0, 0,
+		GL_TEXTURE0,
+		"u_Texture",
+		shape->TexCoordIndex(),
+		shape->TexCoordSize(),
+		shape->TexCoordStride(),
+		shape->TexCoordOffset()
+	);
+	*/
+
+	m_Renderer->PushObject(model);
 }

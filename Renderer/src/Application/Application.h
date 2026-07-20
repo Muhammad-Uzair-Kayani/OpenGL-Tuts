@@ -22,6 +22,8 @@ private:
 
 private:
 
+	void TestObject();
+
 	Window* m_Window;
 	bool m_Running = true;
 

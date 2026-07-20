@@ -8,7 +8,7 @@ Shader::Shader(std::string vertexPath, std::string fragPath)
 	shaderType[GL_FRAGMENT_SHADER] = "FRAGMENT SHADER";
 	GLuint vertex, fragment;
 	CreateShader(vertexPath, GL_VERTEX_SHADER, vertex);
-	CreateShader(fragPath, GL_VERTEX_SHADER, fragment);
+	CreateShader(fragPath, GL_FRAGMENT_SHADER, fragment);
 	CreateShaderProg(vertex, fragment);
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
@@ -68,10 +68,10 @@ void Shader::CreateShaderProg(GLuint vertexID, GLuint fragID)
 
 	int status;
 	char log[512];
-	glGetShaderiv(m_ShaderID, GL_LINK_STATUS, &status);
+	glGetProgramiv(m_ShaderID, GL_LINK_STATUS, &status);
 	if (!status)
 	{
-		glGetShaderInfoLog(m_ShaderID, 512, NULL, log);
+		glGetProgramInfoLog(m_ShaderID, 512, NULL, log);
 		std::cout << "FAILED TO LINK SHADERS::SHADER PROGRA GL LOG INFO::";
 		std::cout << log << "\n";
 	}

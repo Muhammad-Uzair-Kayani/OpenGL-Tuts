@@ -89,7 +89,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Renderer\Utility\Buffer.h" />
     <ClInclude Include="GLM\glm\glm\common.hpp" />
     <ClInclude Include="GLM\glm\glm\detail\_features.hpp" />
     <ClInclude Include="GLM\glm\glm\detail\_fixes.hpp" />
@@ -330,26 +329,31 @@
     <ClInclude Include="GLM\glm\glm\vec3.hpp" />
     <ClInclude Include="GLM\glm\glm\vec4.hpp" />
     <ClInclude Include="GLM\glm\glm\vector_relational.hpp" />
-    <ClInclude Include="src\Renderer\Renderer.h" />
-    <ClInclude Include="src\Renderer\Utility\Shader.h" />
     <ClInclude Include="src\Application\Application.h" />
     <ClInclude Include="src\Consumer\Camera.h" />
     <ClInclude Include="src\Consumer\Window.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Input\Input.h" />
-    <ClInclude Include="src\Renderer\Utility\Texture.h" />
+    <ClInclude Include="src\Renderer\Renderer.h" />
+    <ClInclude Include="src\Resources\Model\Model.h" />
+    <ClInclude Include="src\Resources\Shapes\Shape.h" />
+    <ClInclude Include="src\Resources\Utility\Buffer.h" />
+    <ClInclude Include="src\Resources\Utility\Shader.h" />
+    <ClInclude Include="src\Resources\Utility\Texture.h" />
+    <ClInclude Include="src\Resources\Utility\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Renderer\Utility\Buffer.cpp" />
     <ClCompile Include="GLM\glm\glm\detail\glm.cpp" />
-    <ClCompile Include="src\Renderer\Renderer.cpp" />
-    <ClCompile Include="src\Renderer\Utility\Shader.cpp" />
     <ClCompile Include="src\Application\Application.cpp" />
     <ClCompile Include="src\Consumer\Camera.cpp" />
     <ClCompile Include="src\Consumer\Window.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
+    <ClCompile Include="src\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Resources\Model\Model.cpp" />
+    <ClCompile Include="src\Resources\Utility\Buffer.cpp" />
+    <ClCompile Include="src\Resources\Utility\Shader.cpp" />
+    <ClCompile Include="src\Resources\Utility\Texture.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Renderer\Utility\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Glad\GLAD.vcxproj">
@@ -358,10 +362,6 @@
     <ProjectReference Include="..\GLFW\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="src\Resources\Shaders\FragmentShader.txt" />
-    <Text Include="src\Resources\Shaders\VertexShader.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

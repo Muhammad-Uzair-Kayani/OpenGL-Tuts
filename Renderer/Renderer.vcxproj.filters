@@ -40,6 +40,21 @@
     <Filter Include="src\Input">
       <UniqueIdentifier>{EC4823B3-58B3-D729-A1F1-88CF0D9BB57E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Renderer">
+      <UniqueIdentifier>{73D1DFBF-5F34-6F64-08BA-A71AF4FB3AE7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Resources">
+      <UniqueIdentifier>{D76C8757-432D-038E-0C68-4C0B78E7476A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Resources\Model">
+      <UniqueIdentifier>{57DBE34B-C33C-C159-4CAA-070CB80AF818}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Resources\Shapes">
+      <UniqueIdentifier>{AA17DED5-96A6-679F-3FC5-7B9A2B337845}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Resources\Utility">
+      <UniqueIdentifier>{1A122248-867E-DD42-4F72-75A0BB9DFFAA}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLM\glm\glm\common.hpp">
@@ -777,10 +792,27 @@
     <ClInclude Include="src\Input\Input.h">
       <Filter>src\Input</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\Renderer.h" />
-    <ClInclude Include="src\Renderer\Utility\Shader.h" />
-    <ClInclude Include="src\Renderer\Utility\Texture.h" />
-    <ClInclude Include="src\Renderer\Utility\Buffer.h" />
+    <ClInclude Include="src\Renderer\Renderer.h">
+      <Filter>src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Model\Model.h">
+      <Filter>src\Resources\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Shapes\Shape.h">
+      <Filter>src\Resources\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Utility\Buffer.h">
+      <Filter>src\Resources\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Utility\Shader.h">
+      <Filter>src\Resources\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Utility\Texture.h">
+      <Filter>src\Resources\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\Utility\stb_image.h">
+      <Filter>src\Resources\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GLM\glm\glm\detail\glm.cpp">
@@ -798,14 +830,23 @@
     <ClCompile Include="src\Input\Input.cpp">
       <Filter>src\Input</Filter>
     </ClCompile>
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Renderer\Renderer.cpp" />
-    <ClCompile Include="src\Renderer\Utility\Shader.cpp" />
-    <ClCompile Include="src\Renderer\Utility\Texture.cpp" />
-    <ClCompile Include="src\Renderer\Utility\Buffer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="src\Resources\Shaders\FragmentShader.txt" />
-    <Text Include="src\Resources\Shaders\VertexShader.txt" />
+    <ClCompile Include="src\Renderer\Renderer.cpp">
+      <Filter>src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\Model\Model.cpp">
+      <Filter>src\Resources\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\Utility\Buffer.cpp">
+      <Filter>src\Resources\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\Utility\Shader.cpp">
+      <Filter>src\Resources\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\Utility\Texture.cpp">
+      <Filter>src\Resources\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

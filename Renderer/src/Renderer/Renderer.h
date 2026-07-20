@@ -2,7 +2,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <vector>
-#include "Utility/Shader.h"
+
+#include "Resources/Model/Model.h"
 
 class Renderer
 {
@@ -12,13 +13,15 @@ public:
 	Renderer();
 
 	void OnUpdate(GLFWwindow* window);
+	inline void PushObject(Model* object) { if(object->GetSucces())m_Objects.push_back(object); }
 
 private:
 
-	void Render(GLFWwindow* window);
-	void Draw();
+	void Draw(GLFWwindow* window);
 
 private:
-	std::vector<Shader> m_ShaderPrograms;
+	
+	std::vector<Model*> m_Objects;
+
 };
 
