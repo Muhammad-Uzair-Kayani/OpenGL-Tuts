@@ -28,8 +28,17 @@
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\ResourceManager">
-      <UniqueIdentifier>{3F4EAE55-ABAF-8B63-341D-D215A07DC222}</UniqueIdentifier>
+    <Filter Include="src\Application">
+      <UniqueIdentifier>{701253C7-DC9D-C08B-E5AE-438051B91C8C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Consumer">
+      <UniqueIdentifier>{28D8E2EA-143B-728F-BDC0-AA45A9023E12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Event">
+      <UniqueIdentifier>{3E1ADFB2-AA84-9329-F3C2-44CF5F6C717E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Input">
+      <UniqueIdentifier>{EC4823B3-58B3-D729-A1F1-88CF0D9BB57E}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -753,22 +762,46 @@
     <ClInclude Include="GLM\glm\glm\vector_relational.hpp">
       <Filter>GLM\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\ResourceManager\Shader.h">
-      <Filter>src\ResourceManager</Filter>
+    <ClInclude Include="src\Application\Application.h">
+      <Filter>src\Application</Filter>
     </ClInclude>
-    <ClInclude Include="src\ResourceManager\stb_image.h">
-      <Filter>src\ResourceManager</Filter>
+    <ClInclude Include="src\Consumer\Camera.h">
+      <Filter>src\Consumer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Consumer\Window.h">
+      <Filter>src\Consumer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\Event.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Input\Input.h">
+      <Filter>src\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\Renderer.h" />
+    <ClInclude Include="src\Renderer\Utility\Shader.h" />
+    <ClInclude Include="src\Renderer\Utility\Texture.h" />
+    <ClInclude Include="src\Renderer\Utility\Buffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GLM\glm\glm\detail\glm.cpp">
       <Filter>GLM\glm\glm\detail</Filter>
     </ClCompile>
-    <ClCompile Include="src\ResourceManager\Shader.cpp">
-      <Filter>src\ResourceManager</Filter>
+    <ClCompile Include="src\Application\Application.cpp">
+      <Filter>src\Application</Filter>
     </ClCompile>
-    <ClCompile Include="src\test.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\Consumer\Camera.cpp">
+      <Filter>src\Consumer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Consumer\Window.cpp">
+      <Filter>src\Consumer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Input\Input.cpp">
+      <Filter>src\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Renderer\Utility\Shader.cpp" />
+    <ClCompile Include="src\Renderer\Utility\Texture.cpp" />
+    <ClCompile Include="src\Renderer\Utility\Buffer.cpp" />
   </ItemGroup>
 </Project>

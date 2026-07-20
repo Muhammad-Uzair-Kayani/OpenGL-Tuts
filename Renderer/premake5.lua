@@ -20,7 +20,8 @@ project "Renderer"
         "../Glad/include",
         "../GLFW/include",
 	"Resource",
-	"GLM/glm"
+	"GLM/glm",
+	"src"
     }
 
     links

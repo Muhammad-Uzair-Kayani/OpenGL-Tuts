@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\Glad\include;..\GLFW\include;Resource;GLM\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Glad\include;..\GLFW\include;Resource;GLM\glm;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -73,7 +73,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\Glad\include;..\GLFW\include;Resource;GLM\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Glad\include;..\GLFW\include;Resource;GLM\glm;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -89,6 +89,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Renderer\Utility\Buffer.h" />
     <ClInclude Include="GLM\glm\glm\common.hpp" />
     <ClInclude Include="GLM\glm\glm\detail\_features.hpp" />
     <ClInclude Include="GLM\glm\glm\detail\_fixes.hpp" />
@@ -329,13 +330,26 @@
     <ClInclude Include="GLM\glm\glm\vec3.hpp" />
     <ClInclude Include="GLM\glm\glm\vec4.hpp" />
     <ClInclude Include="GLM\glm\glm\vector_relational.hpp" />
-    <ClInclude Include="src\ResourceManager\Shader.h" />
-    <ClInclude Include="src\ResourceManager\stb_image.h" />
+    <ClInclude Include="src\Renderer\Renderer.h" />
+    <ClInclude Include="src\Renderer\Utility\Shader.h" />
+    <ClInclude Include="src\Application\Application.h" />
+    <ClInclude Include="src\Consumer\Camera.h" />
+    <ClInclude Include="src\Consumer\Window.h" />
+    <ClInclude Include="src\Event\Event.h" />
+    <ClInclude Include="src\Input\Input.h" />
+    <ClInclude Include="src\Renderer\Utility\Texture.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Renderer\Utility\Buffer.cpp" />
     <ClCompile Include="GLM\glm\glm\detail\glm.cpp" />
-    <ClCompile Include="src\ResourceManager\Shader.cpp" />
-    <ClCompile Include="src\test.cpp" />
+    <ClCompile Include="src\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Renderer\Utility\Shader.cpp" />
+    <ClCompile Include="src\Application\Application.cpp" />
+    <ClCompile Include="src\Consumer\Camera.cpp" />
+    <ClCompile Include="src\Consumer\Window.cpp" />
+    <ClCompile Include="src\Input\Input.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Renderer\Utility\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Glad\GLAD.vcxproj">
