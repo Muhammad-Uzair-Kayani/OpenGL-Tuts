@@ -69,6 +69,11 @@ void Application::OnEvent(Event& e)
 
 void Application::TestObject()
 {
+	m_Renderer->PushObject(CreateTriangle());
+}
+
+Model* Application::Create3DCube()
+{
 	Cube* shape = new Cube();
 
 	Model* model = new Model();
@@ -90,10 +95,7 @@ void Application::TestObject()
 
 	model->BindTexture(
 		"src/Resources/Textures/wall.jpg",
-		0,                  // width (filled by stbi_load)
-		0,                  // height (filled by stbi_load)
-		0,                  // channels (filled by stbi_load)
-		0,                  // desired channels
+		0, 0, 0, 0,
 		GL_TEXTURE0,
 		"u_Texture",
 		shape->TexCoordIndex(),
@@ -102,10 +104,39 @@ void Application::TestObject()
 		shape->TexCoordOffset()
 	);
 
-	// Optional: move the cube away from the origin.
-	// Currently your default position is (0,0,0), so this is unnecessary
-	// until you implement a camera/view matrix.
-	// model->SetPosition(0.0f, 0.0f, -2.0f, "u_Model");
+	return model;
+}
 
-	m_Renderer->PushObject(model);
+Model* Application::CreateTriangle()
+{
+	Triangle* shape = new Triangle();
+
+	Model* model = new Model();
+
+	model->BindShader(
+		"src/Resources/Shaders/VertexShader.txt",
+		"src/Resources/Shaders/FragmentShader.txt"
+	);
+
+	model->BindShape(shape);
+
+	model->BindBuffer(
+		shape->PositionIndex(),
+		shape->PositionSize(),
+		shape->PositionStride(),
+		shape->PositionOffset()
+	);
+
+	model->BindTexture(
+		"src/Resources/Textures/wall.jpg",
+		0, 0, 0, 0,
+		GL_TEXTURE0,
+		"u_Texture",
+		shape->TexCoordIndex(),
+		shape->TexCoordSize(),
+		shape->TexCoordStride(),
+		shape->TexCoordOffset()
+	);
+
+	return model;
 }

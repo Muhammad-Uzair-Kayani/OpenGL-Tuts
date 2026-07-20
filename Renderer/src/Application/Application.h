@@ -4,6 +4,7 @@
 #include "Consumer/Camera.h"
 #include "Event/Event.h"
 #include "Renderer/Renderer.h"
+#include "Resources/Model/Model.h"
 
 class Application
 {
@@ -21,6 +22,9 @@ private:
 	void OnEvent(Event&);
 
 private:
+
+	Model* CreateTriangle();
+	Model* Create3DCube();
 
 	void TestObject();
 

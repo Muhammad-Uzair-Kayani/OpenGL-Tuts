@@ -25,6 +25,7 @@ void Model::BindBufferP(GLuint index, size_t size, size_t stride, size_t offset)
 		return;
 	}
 	m_Buffer = new Buffer(m_Shape->GetSize(), m_Shape->GetVertices(), index, size, stride, offset);
+	m_Success = true;
 
 }
 
