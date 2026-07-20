@@ -69,26 +69,31 @@ void Application::OnEvent(Event& e)
 
 void Application::TestObject()
 {
-	Triangle* shape = new Triangle();
+	Cube* shape = new Cube();
 
 	Model* model = new Model();
 
-	model->BindShader("src/Resources/Shaders/VertexShader.txt", "src/Resources/Shaders/FragmentShader.txt");
+	model->BindShader(
+		"src/Resources/Shaders/VertexShader.txt",
+		"src/Resources/Shaders/FragmentShader.txt"
+	);
 
-	model->BindShape(shape);
+	model->BindShape(shape, true);
 
 	model->BindBuffer(
 		shape->PositionIndex(),
 		shape->PositionSize(),
 		shape->PositionStride(),
-		shape->PositionOffset()
+		shape->PositionOffset(),
+		"u_Model"
 	);
 
-	// Later, after you have a texture:
-	/*
 	model->BindTexture(
-		"texture.png",
-		0, 0, 0, 0,
+		"src/Resources/Textures/wall.jpg",
+		0,                  // width (filled by stbi_load)
+		0,                  // height (filled by stbi_load)
+		0,                  // channels (filled by stbi_load)
+		0,                  // desired channels
 		GL_TEXTURE0,
 		"u_Texture",
 		shape->TexCoordIndex(),
@@ -96,7 +101,11 @@ void Application::TestObject()
 		shape->TexCoordStride(),
 		shape->TexCoordOffset()
 	);
-	*/
+
+	// Optional: move the cube away from the origin.
+	// Currently your default position is (0,0,0), so this is unnecessary
+	// until you implement a camera/view matrix.
+	// model->SetPosition(0.0f, 0.0f, -2.0f, "u_Model");
 
 	m_Renderer->PushObject(model);
 }
