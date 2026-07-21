@@ -25,6 +25,12 @@ void Input::OnMouseScrolled(GLFWwindow* window, double xoffset, double yoffset)
 
 void Input::OnKeyPressed(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	
+	if (action == GLFW_PRESS)
+		Key::m_Keys[key] = true;
+	else if (action == GLFW_RELEASE)
+		Key::m_Keys[key] = false;
+
 	KeyPressedEvent e(key, scancode, action, mods);
 	Fn(e);
 }

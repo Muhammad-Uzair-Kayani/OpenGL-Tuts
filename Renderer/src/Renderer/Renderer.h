@@ -4,16 +4,17 @@
 #include <vector>
 
 #include "Resources/Model/Model.h"
+#include "Consumer/Camera.h"
 
 class Renderer
 {
 
 public:
 
-	Renderer();
+	Renderer(Camera* camera);
 
 	void OnUpdate(GLFWwindow* window);
-	inline void PushObject(Model* object) { if(object->GetSucces())m_Objects.push_back(object); }
+	void PushObject(Model* object);
 
 private:
 
@@ -22,6 +23,6 @@ private:
 private:
 	
 	std::vector<Model*> m_Objects;
-
+	Camera* s_CameraInstance;
 };
 

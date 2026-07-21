@@ -23,8 +23,8 @@ private:
 
 private:
 
-	Model* CreateTriangle();
-	Model* Create3DCube();
+	Model* CreateTriangle(float x, float y, float z);
+	Model* Create3DCube(float x, float y, float z);
 
 	void TestObject();
 
@@ -32,7 +32,9 @@ private:
 	bool m_Running = true;
 
 	Renderer* m_Renderer;
-	Camera m_Camera;
+	Camera* m_Camera;
 
+	//Time Variables
+	float m_Time = 0, p_Time = 0, n_Time = 0;
 };
 

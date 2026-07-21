@@ -813,6 +813,7 @@
     <ClInclude Include="src\Resources\Utility\stb_image.h">
       <Filter>src\Resources\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="src\Input\KeyStates.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GLM\glm\glm\detail\glm.cpp">
@@ -848,5 +849,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Input\KeyState.cpp" />
   </ItemGroup>
 </Project>

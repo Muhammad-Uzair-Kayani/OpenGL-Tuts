@@ -13,12 +13,10 @@ class Model
 {
 public:
 
-	Model();
+	Model(Shape* shape, glm::vec3 position, std::string name);
 
-
-	void BindShape(Shape* shape, bool is3D = false);
-
-	void BindBuffer(GLuint index, size_t size, size_t stride, size_t offset, std::string mat4Name = "");
+	void BindBuffer(GLuint index, size_t size,
+					size_t stride, size_t offset);
 
 	void BindTexture(std::string path, int x, int y, int comp,
 					int req_comp, GLenum textureUnit, std::string uniformName,
@@ -27,17 +25,17 @@ public:
 
 	void BindShader(std::string vertexPath, std::string fragPath);
 
+	void TransformObject(glm::mat4 projection, glm::mat4 view);
 
 	inline bool GetSucces() const { return m_Success; }
-	void OnUpdate();
+	void OnUpdate(glm::mat4 projection, glm::mat4 view);
 	void Render();
 	void Draw();
 
-	void SetPosition(float x, float y, float z, std::string mat4Name);
+	void SetPosition();
 
 private:
 
-	void BindBufferP(GLuint index, size_t size, size_t stride, size_t offset);
 
 private:
 
@@ -45,8 +43,10 @@ private:
 	Buffer* m_Buffer = nullptr;
 	Shader* m_Shader = nullptr;
 	Texture* m_Texture = nullptr;
+
 	bool m_Success = false;
-	bool m_Shape3D = false;
+
+	std::string m_Uniform;
 	glm::vec3 m_ModelPosition;
 	glm::mat4 m_ModelMatrix;
 };

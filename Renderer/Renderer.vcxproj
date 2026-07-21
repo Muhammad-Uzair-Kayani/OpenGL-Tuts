@@ -334,6 +334,7 @@
     <ClInclude Include="src\Consumer\Window.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Input\Input.h" />
+    <ClInclude Include="src\Input\KeyStates.h" />
     <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\Resources\Model\Model.h" />
     <ClInclude Include="src\Resources\Shapes\Shape.h" />
@@ -348,6 +349,7 @@
     <ClCompile Include="src\Consumer\Camera.cpp" />
     <ClCompile Include="src\Consumer\Window.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
+    <ClCompile Include="src\Input\KeyState.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Resources\Model\Model.cpp" />
     <ClCompile Include="src\Resources\Utility\Buffer.cpp" />
