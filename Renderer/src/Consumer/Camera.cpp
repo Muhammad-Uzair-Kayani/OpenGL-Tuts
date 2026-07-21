@@ -3,7 +3,7 @@
 #include "Input/KeyStates.h"
 
 Camera::Camera(float width, float height) : 
-		m_Projection(glm::mat4(1.0f)), m_View(glm::mat4(1.0f))
+		m_Projection(glm::mat4(1.0f)), m_View(glm::mat4(1.0f)), m_Width(width), m_Height(height)
 {
 
 	m_Projection = glm::perspective(glm::radians(45.0f), (float)width /
@@ -65,7 +65,20 @@ void Camera::OnMouseScroll(double X, double Y, float deltaTime)
 {
 	std::cout << "FrameTime: " << deltaTime << " - Mouse Scrolled: " << X << ", " << Y << "\n";
 
+	m_FOV -= static_cast<float>(Y);
 
+	if (m_FOV < 1.0f)
+		m_FOV = 1.0f;
+	if (m_FOV > 75.0f)
+		m_FOV = 75.0f;
+
+	m_Projection = glm::perspective(
+		glm::radians(m_FOV),
+		m_Width / m_Height,
+		0.1f,
+		100.0f
+	);
+	
 }
 
 void Camera::OnKeyPressed(float deltaTime)

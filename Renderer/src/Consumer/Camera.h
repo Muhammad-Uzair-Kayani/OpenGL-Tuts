@@ -37,9 +37,8 @@ private:
 	float m_Pitch = 0.f, m_Yaw = -90.f;
 
 	//Zoom Vars
-	float m_XZoom = 0, m_YZoom = 0;
-	float p_XOffset = 0, p_YOffset = 0;
-	float n_XOffset = 0, n_YOffset = 0;
+	float m_Width, m_Height;
+	float m_FOV = 45.f;
 
 	//Movement Related
 	glm::vec3 m_CameraPosition = glm::vec3(0.0f, 0.0f, 3.0f);
