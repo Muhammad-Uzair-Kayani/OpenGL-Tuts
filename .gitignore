@@ -1,6 +1,8 @@
 # Target project folders
 bin/
 bin-int/
+Renderer/src/Resources/Shaders/
+Renderer/src/Resources/Textures/
 .vs/
 
 # Visual Studio build artifacts and logs

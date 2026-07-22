@@ -69,8 +69,8 @@ void Camera::OnMouseScroll(double X, double Y, float deltaTime)
 
 	if (m_FOV < 1.0f)
 		m_FOV = 1.0f;
-	if (m_FOV > 75.0f)
-		m_FOV = 75.0f;
+	if (m_FOV > 90.0f)
+		m_FOV = 90.0f;
 
 	m_Projection = glm::perspective(
 		glm::radians(m_FOV),

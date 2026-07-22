@@ -1,4 +1,6 @@
 #pragma once
+#include <functional>
+#include <tuple>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -13,7 +15,8 @@ class Model
 {
 public:
 
-	Model(Shape* shape, glm::vec3 position, std::string name);
+	Model(Shape* shape, glm::vec3 position, std::string name,
+		std::function<std::vector<std::tuple<float, float, float>>()>);
 
 	void BindBuffer(GLuint index, size_t size,
 					size_t stride, size_t offset);
@@ -34,6 +37,11 @@ public:
 
 	void SetPosition();
 
+
+public:
+
+	std::function<std::vector<std::tuple<float, float, float>>()> m_CallBack;
+
 private:
 
 
@@ -48,6 +56,7 @@ private:
 
 	std::string m_Uniform;
 	glm::vec3 m_ModelPosition;
+	glm::vec3 m_Rotation;
 	glm::mat4 m_ModelMatrix;
 };
 

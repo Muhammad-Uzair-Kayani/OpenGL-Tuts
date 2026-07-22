@@ -33,7 +33,7 @@ private:
 	float p_XPos = 0, p_YPos = 0;
 	float n_XPos = 0, n_YPos = 0;
 	bool m_FirstMouse = true;
-	float m_Sensi = 80.f;
+	float m_Sensi = 10.f;
 	float m_Pitch = 0.f, m_Yaw = -90.f;
 
 	//Zoom Vars
@@ -43,7 +43,7 @@ private:
 	//Movement Related
 	glm::vec3 m_CameraPosition = glm::vec3(0.0f, 0.0f, 3.0f);
 	glm::vec3 m_CameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-	float speed = 1.f;
+	float speed = 10.f;
 
 	//Transformation of World & Objects
 	glm::mat4 m_View;

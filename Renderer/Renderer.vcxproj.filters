@@ -814,6 +814,8 @@
       <Filter>src\Resources\Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\Input\KeyStates.h" />
+    <ClInclude Include="src\Resources\Shapes\Stars.h" />
+    <ClInclude Include="src\Resources\Shapes\SolarSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GLM\glm\glm\detail\glm.cpp">

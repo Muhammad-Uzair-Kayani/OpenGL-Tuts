@@ -12,6 +12,7 @@ public:
 		GLuint index, size_t size,
 		size_t stride, GLuint offset);
 
+	void Bind();
 	void Update();
 	void Draw();
 	void Render();

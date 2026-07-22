@@ -338,6 +338,8 @@
     <ClInclude Include="src\Renderer\Renderer.h" />
     <ClInclude Include="src\Resources\Model\Model.h" />
     <ClInclude Include="src\Resources\Shapes\Shape.h" />
+    <ClInclude Include="src\Resources\Shapes\SolarSystem.h" />
+    <ClInclude Include="src\Resources\Shapes\Stars.h" />
     <ClInclude Include="src\Resources\Utility\Buffer.h" />
     <ClInclude Include="src\Resources\Utility\Shader.h" />
     <ClInclude Include="src\Resources\Utility\Texture.h" />

@@ -12,6 +12,12 @@ Texture::Texture(std::string path, int x, int y, int comp,
 	Init(path, x, y, comp, req_comp, textureUnit, uniformLoc, index, size, stride, offset);
 }
 
+void Texture::Bind()
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_TextureID);
+}
+
 void Texture::Init(std::string path, int x, int y, int comp, int req_comp,  GLenum textureUnit, GLuint uniformLoc,
 					GLuint index, size_t size,
 					size_t stride, GLuint offset)

@@ -3,6 +3,7 @@
 
 #include "Resources/Model/Model.h"
 #include "Resources/Shapes/Shape.h"
+#include "Resources/Shapes/SolarSystem.h"
 #include "Renderer/Renderer.h"
 
 #include <glm/glm.hpp>
@@ -28,6 +29,7 @@ void Application::Run()
 		n_Time = glfwGetTime();
 		m_Time = n_Time - p_Time;
 
+		OnSolarSystemUpdate(m_Time);
 		OnUpdate();
 
 		p_Time = n_Time;
@@ -88,70 +90,17 @@ void Application::OnEvent(Event& e)
 
 void Application::TestObject()
 {
-	m_Renderer->PushObject(CreateTriangle(1.f, 0.f, 1.f));
-	m_Renderer->PushObject(Create3DCube(0.f, 1.f, 1.f));
-}
-
-Model* Application::Create3DCube(float x, float y, float z)
-{
-	Cube* shape = new Cube();
-
-	Model* model = new Model(shape, glm::vec3(x, y, z), "model");
-
-	model->BindShader(
-		"src/Resources/Shaders/CubeVertex.txt",
-		"src/Resources/Shaders/CubeFragment.txt"
-	);
-
-	model->BindBuffer(
-		shape->PositionIndex(),
-		shape->PositionSize(),
-		shape->PositionStride(),
-		shape->PositionOffset()
-	);
-
-	model->BindTexture(
-		"src/Resources/Textures/wall.jpg",
-		0, 0, 0, 0,
-		GL_TEXTURE0,
-		"u_Texture",
-		shape->TexCoordIndex(),
-		shape->TexCoordSize(),
-		shape->TexCoordStride(),
-		shape->TexCoordOffset()
-	);
-
-	return model;
-}
-
-Model* Application::CreateTriangle(float x, float y, float z)
-{
-	Triangle* shape = new Triangle();
-
-	Model* model = new Model(shape, glm::vec3(x, y, z), "model");
-
-	model->BindShader(
-		"src/Resources/Shaders/TriangleVertex.txt",
-		"src/Resources/Shaders/TriangleFragment.txt"
-	);
-
-	model->BindBuffer(
-		shape->PositionIndex(),
-		shape->PositionSize(),
-		shape->PositionStride(),
-		shape->PositionOffset()
-	);
-
-	model->BindTexture(
-		"src/Resources/Textures/wall.jpg",
-		0, 0, 0, 0,
-		GL_TEXTURE0,
-		"u_Texture",
-		shape->TexCoordIndex(),
-		shape->TexCoordSize(),
-		shape->TexCoordStride(),
-		shape->TexCoordOffset()
-	);
-
-	return model;
+	m_Renderer->PushObject(CreateSun());
+	m_Renderer->PushObject(CreateMercury());
+	m_Renderer->PushObject(CreateVenus());
+	m_Renderer->PushObject(CreateEarth());
+	m_Renderer->PushObject(CreateMoon());
+	m_Renderer->PushObject(CreateMars());
+	m_Renderer->PushObject(CreateJupiter());
+	m_Renderer->PushObject(CreateSaturn());
+	m_Renderer->PushObject(CreateSaturnRing());
+	m_Renderer->PushObject(CreateUranus());
+	m_Renderer->PushObject(CreateUranusRing());
+	m_Renderer->PushObject(CreateNeptune());
+	m_Renderer->PushObject(CreatePluto());
 }
